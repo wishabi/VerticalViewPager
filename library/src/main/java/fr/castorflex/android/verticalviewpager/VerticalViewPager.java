@@ -52,6 +52,9 @@ import java.util.Comparator;
  * Just a copy of the original ViewPager modified to support vertical Scrolling
  */
 public class VerticalViewPager extends ViewGroup {
+    public static interface CanScrollVertically {
+      public boolean canScrollVertically(int direction);
+    }
 
     private static final String TAG = "ViewPager";
     private static final boolean DEBUG = false;
@@ -2363,7 +2366,10 @@ public class VerticalViewPager extends ViewGroup {
             }
         }
 
-        return checkV && ViewCompat.canScrollVertically(v, -dy);
+        if (v instanceof CanScrollVertically)
+          return checkV && ((CanScrollVertically)v).canScrollVertically(-dy);
+        else
+          return checkV && ViewCompat.canScrollVertically(v, -dy);
     }
 
     @Override
